@@ -1,11 +1,8 @@
 class HomeController < ApplicationController
-
-  COUNTRIES = 
-  TANK_TYPES = %w(  Тяж1 ПТ-САУ )
+  
   TYPES = %w( Arm maxFire Durability Guns )
 
-  def index
-    all_tanks_spec = [
+  ALL_TANKS_SPEC = [
       {
         tank_type: 'Средние',
         tank_type_name: 'Средние',
@@ -38,18 +35,24 @@ class HomeController < ApplicationController
       }
     ]
 
+  def index      
+    render json: load_all_tanks
+  end
 
-    table ||= []
+  def images
+    @tanks = load_all_tanks
+  end
 
-    ap all_tanks_spec
+  def load_all_tanks
+    all_tanks ||= []
 
-    all_tanks_spec.each do |tank_spec|
+    ALL_TANKS_SPEC.each do |tank_spec|
       tank_spec[:countries].each do |country|
-        table << by_country_and_tank_type(country, tank_spec)
+        all_tanks << by_country_and_tank_type(country, tank_spec)
       end      
     end
-
-    render json: table.flatten
+  
+    all_tanks.flatten    
   end
 
   def by_country_and_tank_type(country, tank_spec)
@@ -57,7 +60,7 @@ class HomeController < ApplicationController
 
     arm = get_data(country, tank_type, TYPES[0] )
     max_fire = get_data(country, tank_type, TYPES[1] )
-    durability = get_data(country, tank_type, TYPES[2] )
+    durability = get_data(country, tank_type, TYPES[2] )    
 
     arm.categories.enum_for(:each_with_index).map do |tank, i|
       result ||= {}
@@ -65,6 +68,9 @@ class HomeController < ApplicationController
       result['level'] = arm['level'][i]
       result['country'] = country
       result['tank_type'] = tank_spec[:tank_type_name]
+
+      image = get_data(country, tank_type, TYPES[0], result['level'], 1).pic
+      result['image'] = "http://tanks-vs.com/#{image}"
 
       arm.series.each do |serie|
         result[serie['name']] = serie['data'][i]
@@ -82,8 +88,8 @@ class HomeController < ApplicationController
     end    
   end
 
-  def get_data(country, tankType, type)
-    url = URI.encode("http://tanks-vs.com/getData_whole.php?country=#{country}&tankType=#{tankType}&type=#{type}&startLevel=1&quantity=10")
+  def get_data(country, tankType, type, start_level = 1, quantity = 10)
+    url = URI.encode("http://tanks-vs.com/getData_whole.php?country=#{country}&tankType=#{tankType}&type=#{type}&startLevel=#{start_level}&quantity=#{quantity}")
 
     ap url
 
@@ -95,10 +101,13 @@ class HomeController < ApplicationController
         }
       }
 
-    response_body = response.body
-    error_index = response_body.index("{")
-    response_body = response_body[error_index, response_body.length] if error_index && error_index > 0
+    OpenStruct.new JSON.parse(exclude_error(response.body))
+  end
 
-    OpenStruct.new JSON.parse(response_body)
+  def exclude_error(body)
+    response_body = body
+    error_index = body.index("{")
+    response_body[error_index, body.length] if error_index && error_index > 0
+    response_body
   end
 end

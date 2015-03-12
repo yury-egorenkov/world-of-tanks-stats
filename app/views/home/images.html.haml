@@ -1,0 +1,7 @@
+- @tanks.each do |tank|
+  .tank
+    = link_to tank.image do
+      .image
+        = image_tag tank.image
+      .title
+        = tank.name
