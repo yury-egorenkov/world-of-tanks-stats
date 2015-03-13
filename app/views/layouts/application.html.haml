@@ -5,12 +5,12 @@
     %meta{:content => 'IE=edge', 'http-equiv' => 'X-UA-Compatible'}
     %meta{:content => 'width=device-width, initial-scale=1', :name => 'viewport'}
 
-    %title instabot1
+    %title World Of Tanks Stats
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
 
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
-  %body{class: @page_name}
+  %body
     = yield

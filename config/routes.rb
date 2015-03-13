@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   get 'home/index'
   get 'home/images'
+  get 'home/tanks_data'
   get 'home/mask'
 
   # The priority is based upon order of creation: first created -> highest priority.

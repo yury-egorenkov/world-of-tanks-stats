@@ -35,7 +35,10 @@ class HomeController < ApplicationController
       }
     ]
 
-  def index      
+  def index
+  end
+
+  def tanks_data      
     render json: load_all_tanks
   end
 
