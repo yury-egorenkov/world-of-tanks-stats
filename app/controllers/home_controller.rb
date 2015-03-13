@@ -43,6 +43,9 @@ class HomeController < ApplicationController
     @tanks = load_all_tanks
   end
 
+  def mask
+  end
+
   def load_all_tanks
     all_tanks ||= []
 

@@ -51,6 +51,8 @@ gem 'autoprefixer-rails'
 gem 'json'
 gem 'nokogiri'
 
+gem 'inline_svg'
+
 
 
 
