@@ -33,3 +33,53 @@
   width: 100%;
   height: 100%;
 }
+
+.vertical-space {
+  margin-top: 20px;
+}
+
+.armor-legend {  
+
+  & > * {
+    // display: inline-block;
+    float: left;
+    margin: 0;
+    padding: 0;
+    height: 32px;
+    line-height: 32px;
+  }
+
+  .title {
+    margin-right: 4px;
+  } 
+
+  .step {
+    text-align: center;
+    width: 32px;
+    background-color: #ddd;
+    margin-left: 1px;
+    border-radius: 4px;
+  }
+}
+
+.flag {
+  $width: 150px / 6;
+  $height: 90px / 6;
+
+  display: inline-block;
+
+  background-image: url( asset_path('nation-retina.png') );
+  background-repeat: no-repeat;
+  background-size: $width ($height * 4);
+  width: $width;
+  height: $height;
+
+  $country_names: "us", "ussr", "germany", "uk";
+  @each $country in $country_names {
+      $i: index($country_names, $country);
+      &.#{$country} {
+        background-position: 0 ($i - 1) * (-$height);
+      }    
+  }
+
+}

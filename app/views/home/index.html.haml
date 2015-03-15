@@ -6,10 +6,18 @@
     .col-xs-12
       .btn-toolbar{"aria-label" => "...", :role => "toolbar"}
         .btn-group{"aria-label" => "...", :role => "group"}
-          %button.btn.btn-default{:type => "button"} СССР
-          %button.btn.btn-default{:type => "button"} ГЕР
-          %button.btn.btn-default{:type => "button"} США
-          %button.btn.btn-default{:type => "button"} БРИТ
+          %button.btn.btn-default{:type => "button"} 
+            .flag.ussr
+            СССР
+          %button.btn.btn-default{:type => "button"} 
+            .flag.germany
+            ГЕР
+          %button.btn.btn-default{:type => "button"} 
+            .flag.us
+            США
+          %button.btn.btn-default{:type => "button"} 
+            .flag.uk
+            БРИТ
 
         .btn-group{"aria-label" => "...", :role => "group"}
           %button.btn.btn-default{:type => "button"} Легкие
@@ -17,26 +25,65 @@
           %button.btn.btn-default{:type => "button"} Тяжелые
           %button.btn.btn-default{:type => "button"} ПТ-САУ
 
-        .btn-group{"aria-label" => "...", :role => "group"} 
+        .btn-group.pull-right{"aria-label" => "...", :role => "group"} 
           -[*1..10].each do |i|
             %button.btn.btn-default{:type => "button"}
               = RomanNumerals.to_roman(i)
               = " Уровень" if i == 10
 
+  .row.vertical-space
+    .col-xs-6
+      .btn-group{"aria-label" => "...", :role => "group"}
+        .btn-group{:role => "group"}
+          %button.btn.btn-default.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :type => "button"}
+            Макс. урон, у.е.
+            %span.caret
+          %ul.dropdown-menu{:role => "menu"}
+            %li
+              %a{:href => "#"} Dropdown link
+            %li
+              %a{:href => "#"} Dropdown link
+
+      .btn-group{"aria-label" => "...", :role => "group"}
+        .btn-group{:role => "group"}
+          %button.btn.btn-default.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :type => "button"}
+            Танк с зонами пробоя
+            %span.caret
+          %ul.dropdown-menu{:role => "menu"}
+            %li
+              %a{:href => "#"} Зоны пробоя схематично
+            %li
+              %a{:href => "#"} Танк и зоны пробоя схематично
+            %li
+              %a{:href => "#"} Точки
+
+    .col-xs-6
+      .pull-right
+        .armor-legend
+          .title
+            Броня, у.е.
+          .step
+            0
+          .step
+            25
+          .step
+            50
+          .step
+            75
+          .step
+            100
+          .step
+            125
+          .step
+            150
+          .step
+            175
+          .step
+            200
   .row
-    .col-xs-6
-      .dropdown
-        %button#dropdownMenu1.btn.btn-default.dropdown-toggle{"aria-expanded" => "true", "data-toggle" => "dropdown", :type => "button"}
-          Макс. урон, у.е.
-          %span.caret
-        %ul.dropdown-menu{"aria-labelledby" => "dropdownMenu1", :role => "menu"}
-          %li{:role => "presentation"}
-            %a{:href => "#", :role => "menuitem", :tabindex => "-1"} Action
-          %li{:role => "presentation"}
-            %a{:href => "#", :role => "menuitem", :tabindex => "-1"} Another action
-          %li{:role => "presentation"}
-            %a{:href => "#", :role => "menuitem", :tabindex => "-1"} Something else here
-          %li{:role => "presentation"}
-            %a{:href => "#", :role => "menuitem", :tabindex => "-1"} Separated link
-    .col-xs-6
+    .col-xs-12
+
+
+
+
 
