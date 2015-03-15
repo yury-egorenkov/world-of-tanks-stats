@@ -88,6 +88,14 @@ ready = ->
       .attr('width', 80)
       .attr('height', 80)
       .attr('xlink:href', (d) -> "assets/tanks/" + d["image"])
+      .attr 'tank', (d) -> 
+        $('#Лоб *').css({ fill: armor(d["Лоб"]) })
+        $('#Борт *').css({ fill: armor(d["Борт"]) })
+        $('#Корма').css({ fill: armor(d["Корма"]) })
+        $('#Лоб-башни').css({ fill: armor(d["Лоб башни"]) })
+        $('#Борт-башни').css({ fill: armor(d["Борт башни"]) })
+        $('#Корма-башни').css({ fill: armor(d["Корма башни"]) })
+        
       g.append('text')
         .attr('dx', 40)
         .attr('dy', 5)
