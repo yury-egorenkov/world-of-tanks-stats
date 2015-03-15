@@ -17,6 +17,10 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+.tanks-stat {
+  min-width: 1170px;
+}
+
 .tank {
   position: relative;
 
@@ -35,7 +39,7 @@
 }
 
 .vertical-space {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .armor-legend {  
@@ -54,6 +58,8 @@
   } 
 
   .step {
+    color: white;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.2);
     text-align: center;
     width: 32px;
     background-color: #ddd;
@@ -63,8 +69,8 @@
 }
 
 .flag {
-  $width: 150px / 6;
-  $height: 90px / 6;
+  $width: 33px; // Original width: 150px;
+  $height: 20px; // Original height: 20px;
 
   display: inline-block;
 
@@ -82,4 +88,23 @@
       }    
   }
 
+}
+
+.btn div {
+  float: left;
+  vertical-align: middle;
+  &:not(:first-child) {
+    margin-left: 4px;
+  }  
+}
+
+.chart {
+  min-width: 1170px;
+  min-height: 500px;
+}
+
+path, line {
+    fill: none;
+    stroke: #999;
+    shape-rendering: crispEdges;
 }

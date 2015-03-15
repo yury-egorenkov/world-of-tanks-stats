@@ -1,4 +1,4 @@
-.container
+.container.tanks-stat
   .row
     .col-xs-12
       %h1 Мир танков
@@ -8,16 +8,20 @@
         .btn-group{"aria-label" => "...", :role => "group"}
           %button.btn.btn-default{:type => "button"} 
             .flag.ussr
-            СССР
+            .text
+              СССР
           %button.btn.btn-default{:type => "button"} 
             .flag.germany
-            ГЕР
+            .text
+              ГЕР
           %button.btn.btn-default{:type => "button"} 
             .flag.us
-            США
+            .text
+              США
           %button.btn.btn-default{:type => "button"} 
             .flag.uk
-            БРИТ
+            .text
+              БРИТ
 
         .btn-group{"aria-label" => "...", :role => "group"}
           %button.btn.btn-default{:type => "button"} Легкие
@@ -47,13 +51,15 @@
       .btn-group{"aria-label" => "...", :role => "group"}
         .btn-group{:role => "group"}
           %button.btn.btn-default.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :type => "button"}
-            Танк с зонами пробоя
+            Зоны пробоя на танках
             %span.caret
           %ul.dropdown-menu{:role => "menu"}
             %li
+              %a{:href => "#"} Танки
+            %li
               %a{:href => "#"} Зоны пробоя схематично
             %li
-              %a{:href => "#"} Танк и зоны пробоя схематично
+              %a{:href => "#"} Зоны пробоя схематично на танках
             %li
               %a{:href => "#"} Точки
 
@@ -65,23 +71,43 @@
           .step
             0
           .step
-            25
-          .step
-            50
+            37
           .step
             75
           .step
-            100
-          .step
-            125
+            112
           .step
             150
           .step
-            175
+            188
           .step
-            200
-  .row
+            225
+          .step
+            262
+          .step
+            300
+  .row.vertical-space
     .col-xs-12
+      .chart
+  .row.vertical-space.pull-right
+    .col-xs-12
+      .btn-group{"aria-label" => "По Х", :role => "group"}
+        .btn-group{:role => "group"}
+          %button.btn.btn-default.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :type => "button"}
+            Скорость, км./ч.
+            %span.caret
+          %ul.dropdown-menu{:role => "menu"}
+            %li
+              %a{:href => "#"} Dropdown link
+            %li
+              %a{:href => "#"} Dropdown link    
+  .row.vertical-space
+    .col-xs-12.center
+      %p.text-center
+        &copy;
+        =link_to 'Yury Egorenkov', 'mailto:yury.egorenkov@gmail.com'
+        \- Montenegro 2015
+
 
 
 
