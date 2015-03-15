@@ -2,6 +2,9 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
+splitDomain = (domain) ->
+  [domain[0], (domain[1] - domain[0]) / 2, domain[1]]
+
 ready = ->
   margin = 
     top: 10
@@ -29,7 +32,7 @@ ready = ->
         .range([3, 10])
 
   armor = d3.scale.linear()
-            .range(['green', 'red'])
+            .range(['#5cb85c', '#f0ad4e', '#d9534f'])
 
 
   d3.json 'http://localhost:3000/data.json', (tanksData) ->
@@ -46,9 +49,8 @@ ready = ->
       d["Прочность"]
     )
 
-    armor.domain d3.extent(tanksData, (d) ->
-      d["Бронепр-ть базовая"]
-    )
+    armorDomain = d3.extent(tanksData, (d) -> d["Бронепр-ть базовая"])
+    armor.domain(splitDomain(armorDomain))
 
     $('.armor-legend .step').each( (d) -> 
       $(this).css('background-color', armor($(this).text()))
