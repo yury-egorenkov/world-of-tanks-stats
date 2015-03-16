@@ -32,7 +32,7 @@ ready = ->
         .range([3, 10])
 
   armor = d3.scale.linear()
-            .range(['#5cb85c', '#f0ad4e', '#d9534f'])
+            .range(['#d9534f', '#f0ad4e', '#5cb85c'])
 
 
   d3.json 'http://localhost:3000/data.json', (tanksData) ->
@@ -63,45 +63,48 @@ ready = ->
     svg.append('g')
       .call d3.svg.axis().scale(y).orient('left')
 
-    g = svg.selectAll('g.point')
+    tankSize = 100
+
+    tank = svg.selectAll('g.tank')
            .data(tanksData)
            .enter()
            .append('g')
-           .attr('class', 'point')
+           .attr('class', 'tank')
            .filter((d) -> d["country"] == "Ru" && d["tank_type"] == "Средние")
 
-    # g.append('circle')
-    #   .attr('r', (d) -> r(d["Прочность"]))
-    #   .attr('fill', (d) -> armor(d["Бронепр-ть базовая"]))
-    #   .attr('cx', (d) -> x(d["Скорость"]))
-    #   .attr('cy', (d) -> y(d["Макс. урон за 10 сек"]))
-    #   g.append('text')
-    #     .attr('dx', 10)
-    #     .attr('dy', 5)
-    #     .text((d) -> d["name"])
-    #     .attr('x', (d) -> x(d["Скорость"]))
-    #     .attr('y', (d) -> y(d["Макс. урон за 10 сек"]))
-
-    g.append("svg:image")
-      .attr('x', (d) -> x(d["Скорость"]) - 80 / 2)
-      .attr('y', (d) -> y(d["Макс. урон за 10 сек"]) - 80 / 2)
-      .attr('width', 80)
-      .attr('height', 80)
-      .attr('xlink:href', (d) -> "assets/tanks/" + d["image"])
-      .attr 'tank', (d) -> 
-        $('#Лоб *').css({ fill: armor(d["Лоб"]) })
-        $('#Борт *').css({ fill: armor(d["Борт"]) })
-        $('#Корма').css({ fill: armor(d["Корма"]) })
-        $('#Лоб-башни').css({ fill: armor(d["Лоб башни"]) })
-        $('#Борт-башни').css({ fill: armor(d["Борт башни"]) })
-        $('#Корма-башни').css({ fill: armor(d["Корма башни"]) })
+    tank.append("svg:image")
+      .attr('x', (d) -> x(d["Скорость"]))
+      .attr('y', (d) -> y(d["Макс. урон за 10 сек"]) - tankSize / 2)
+      .attr('width', tankSize)
+      .attr('height', tankSize)
+      .attr('xlink:href', (d) -> 
+        params = ['Лоб', 'Борт', 'Корма', 'Лоб-башни', 'Борт-башни', 'Корма-башни'].map (x) ->
+          x + "=" + armor(d[x]).replace(/#/, '')
+        encodeURI "/home/tank_image/" + d["image"].replace(/\.[^\.]+$/, '') + '?' + params.join('&')
+      )
         
-      g.append('text')
-        .attr('dx', 40)
-        .attr('dy', 5)
-        .text((d) -> d["name"])
-        .attr('x', (d) -> x(d["Скорость"]))
-        .attr('y', (d) -> y(d["Макс. урон за 10 сек"]))
+    tank.append('circle')
+      .attr('r', (d) -> r(d["Прочность"]))
+      .attr('fill', (d) -> armor(d["Бронепр-ть базовая"]))
+      .attr('cx', (d) -> x(d["Скорость"]))
+      .attr('cy', (d) -> y(d["Макс. урон за 10 сек"]))
+      # g.append('text')
+      #   .attr('dx', 10)
+      #   .attr('dy', 5)
+      #   .text((d) -> d["name"])
+      #   .attr('x', (d) -> x(d["Скорость"]))
+      #   .attr('y', (d) -> y(d["Макс. урон за 10 сек"]))
+
+
+    tank.append('text')
+      .attr('dx', tankSize)
+      .attr('dy', 5)
+      .text((d) -> d["name"])
+      .attr('x', (d) -> x(d["Скорость"]))
+      .attr('y', (d) -> y(d["Макс. урон за 10 сек"]))
+
+    # mySVGsToInject = document.querySelectorAll('img.inject-me');
+    # SVGInjector(mySVGsToInject);      
 
 
 

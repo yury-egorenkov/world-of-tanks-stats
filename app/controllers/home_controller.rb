@@ -49,6 +49,38 @@ class HomeController < ApplicationController
   def mask
   end
 
+  def tank_image
+    name = params[:name]
+
+    path = Rails.root.join('app', 'assets', 'images', 'tanks')
+    image = Magick::Image.read("#{path}/#{name}.png").first
+
+    unless File.exists?("#{path}/#{name}.svg")
+      send_data image.to_blob, :disposition => 'inline', 
+        type: image.mime_type
+      return
+    end
+
+    svg = File.read("#{path}/T-34-85.svg")
+    doc = Nokogiri::XML.parse(svg)
+    %w( Лоб Борт Корма Лоб-башни Борт-башни Корма-башни ).each do |item|
+      doc.css("##{item}").set(:fill, "##{params[item]}") if params[item]  
+    end
+    
+    File.open("#{path}/T-34-85.svg", "w") do |file|
+      file.puts doc
+    end
+
+    mask = Magick::Image.read("#{path}/T-34-85.svg").first
+    mask.background_color= "Transparent"
+    mask.opacity = 0.5
+
+    composite = image.dissolve(mask, 0.5, 1, Magick::CenterGravity)
+
+    resized = composite #.resize_to_fit(400, 400)
+    send_data resized.to_blob, :disposition => 'inline', type: resized.mime_type
+  end
+
   def load_all_tanks
     all_tanks ||= []
 

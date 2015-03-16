@@ -54,5 +54,5 @@ gem 'nokogiri'
 gem 'inline_svg'
 gem 'roman-numerals'
 
-
+gem 'rmagick'
 

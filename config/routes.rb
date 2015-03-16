@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get 'home/images'
   get 'home/tanks_data'
   get 'home/mask'
+  get 'home/tank_image/:name' => 'home#tank_image'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
