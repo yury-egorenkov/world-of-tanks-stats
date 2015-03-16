@@ -49,11 +49,15 @@ class HomeController < ApplicationController
   def mask
   end
 
+  # Танк раскраска
+  # http://localhost:3000/home/tank_image/T-34-85?%D0%9B%D0%BE%D0%B1=ff0000&%D0%91%D0%BE%D1%80%D1%82=00ff00&%D0%9A%D0%BE%D1%80%D0%BC%D0%B0=0000ff&%D0%9B%D0%BE%D0%B1-%D0%B1%D0%B0%D1%88%D0%BD%D0%B8=070707&%D0%91%D0%BE%D1%80%D1%82-%D0%B1%D0%B0%D1%88%D0%BD%D0%B8=bbaaff&%D0%9A%D0%BE%D1%80%D0%BC%D0%B0-%D0%B1%D0%B0%D1%88%D0%BD%D0%B8=dc604f
   def tank_image
+    opacity = 0.99
+
     name = params[:name]
 
     path = Rails.root.join('app', 'assets', 'images', 'tanks')
-    image = Magick::Image.read("#{path}/#{name}.png").first
+    image = Magick::Image.read("#{path}/#{name}.png").first {self.background_color = "none"}
 
     unless File.exists?("#{path}/#{name}.svg")
       send_data image.to_blob, :disposition => 'inline', 
@@ -71,9 +75,9 @@ class HomeController < ApplicationController
       file.puts doc
     end
 
-    mask = Magick::Image.read("#{path}/T-34-85.svg").first
-    mask.background_color= "Transparent"
-    mask.opacity = 0.5
+    `convert -background none "#{path}/#{name}.svg" "#{path}/#{name}-mask.png"`
+
+    mask = Magick::Image.read("#{path}/#{name}-mask.png").first
 
     composite = image.dissolve(mask, 0.5, 1, Magick::CenterGravity)
 

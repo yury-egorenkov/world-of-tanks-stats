@@ -63,7 +63,7 @@ ready = ->
     svg.append('g')
       .call d3.svg.axis().scale(y).orient('left')
 
-    tankSize = 100
+    tankSize = 150
 
     tank = svg.selectAll('g.tank')
            .data(tanksData)
@@ -73,7 +73,7 @@ ready = ->
            .filter((d) -> d["country"] == "Ru" && d["tank_type"] == "Средние")
 
     tank.append("svg:image")
-      .attr('x', (d) -> x(d["Скорость"]))
+      .attr('x', (d) -> x(d["Скорость"]) - tankSize)
       .attr('y', (d) -> y(d["Макс. урон за 10 сек"]) - tankSize / 2)
       .attr('width', tankSize)
       .attr('height', tankSize)
@@ -97,7 +97,7 @@ ready = ->
 
 
     tank.append('text')
-      .attr('dx', tankSize)
+      .attr('dx', 10)
       .attr('dy', 5)
       .text((d) -> d["name"])
       .attr('x', (d) -> x(d["Скорость"]))
