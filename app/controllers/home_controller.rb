@@ -36,6 +36,7 @@ class HomeController < ApplicationController
     ]
 
   def index
+    @data = JSON.parse(File.read("public/data.json"))
   end
 
   def tanks_data      
@@ -61,11 +62,10 @@ class HomeController < ApplicationController
     svg_file = "#{path}/#{name}.svg"
     mask_file = "#{path}/#{name}-mask.png"
 
-
     image = Magick::Image.read(png_file).first {self.background_color = "none"}
 
     unless File.exists?(svg_file)
-      send_data image.to_blob, :disposition => 'inline', 
+      send_data image.flop.to_blob, :disposition => 'inline', 
         type: image.mime_type
       return
     end
@@ -74,7 +74,6 @@ class HomeController < ApplicationController
     doc = Nokogiri::XML.parse(svg)
     %w( Лоб Борт Корма Лоб-башни Борт-башни Корма-башни ).each do |item|
       doc.css("##{item}").set(:fill, "##{params[item]}") if params[item]  
-      ap doc.css("##{item}")
     end
     
     File.open(svg_file, "w") do |file|
@@ -87,7 +86,7 @@ class HomeController < ApplicationController
 
     composite = image.dissolve(mask, 0.5, 1, Magick::CenterGravity)
 
-    resized = composite #.resize_to_fit(400, 400)
+    resized = composite.flop.resize_to_fit(400, 400)
     send_data resized.to_blob, :disposition => 'inline', type: resized.mime_type
   end
 

@@ -3,22 +3,22 @@
     .col-xs-12
       %h1 Мир танков
   .row
-    .col-xs-12
+    .col-xs-12.filters
       .btn-toolbar{"aria-label" => "...", :role => "toolbar"}
         .btn-group{"aria-label" => "...", :role => "group"}
-          %button.btn.btn-default{:type => "button"} 
+          %button.btn.btn-default{:type => "button", key: 'country', value: 'Ru'} 
             .flag.ussr
             .text
               СССР
-          %button.btn.btn-default{:type => "button"} 
+          %button.btn.btn-default{:type => "button", key: 'country', value: 'Ge'} 
             .flag.germany
             .text
               ГЕР
-          %button.btn.btn-default{:type => "button"} 
+          %button.btn.btn-default{:type => "button", key: 'country', value: 'Am'} 
             .flag.us
             .text
               США
-          %button.btn.btn-default{:type => "button"} 
+          %button.btn.btn-default{:type => "button", key: 'country', value: 'Uk'}
             .flag.uk
             .text
               БРИТ
@@ -37,31 +37,22 @@
 
   .row.vertical-space
     .col-xs-6
-      .btn-group{"aria-label" => "...", :role => "group"}
+      .btn-group{"aria-label" => "X", :role => "group"}
         .btn-group{:role => "group"}
-          %button.btn.btn-default.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :type => "button"}
-            Макс. урон, у.е.
+          %button.btn.btn-default.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :type => "button", :axis => "y"}
+            Макс. урон за 10 сек
             %span.caret
           %ul.dropdown-menu{:role => "menu"}
             %li
-              %a{:href => "#"} Dropdown link
+              %a{:href => "#"} Макс. урон за 10 сек
             %li
-              %a{:href => "#"} Dropdown link
-
-      .btn-group{"aria-label" => "...", :role => "group"}
-        .btn-group{:role => "group"}
-          %button.btn.btn-default.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :type => "button"}
-            Зоны пробоя на танках
-            %span.caret
-          %ul.dropdown-menu{:role => "menu"}
+              %a{:href => "#"} Прочность
             %li
-              %a{:href => "#"} Танки
+              %a{:href => "#"} Скорость
             %li
-              %a{:href => "#"} Зоны пробоя схематично
+              %a{:href => "#"} Урон КС/БП
             %li
-              %a{:href => "#"} Зоны пробоя схематично на танках
-            %li
-              %a{:href => "#"} Точки
+              %a{:href => "#"} Урон базовый
 
     .col-xs-6
       .pull-right
@@ -92,16 +83,23 @@
 
   .row.vertical-space.pull-right
     .col-xs-12
-      .btn-group{"aria-label" => "По Х", :role => "group"}
+      .btn-group{"aria-label" => "Y", :role => "group"}
         .btn-group.dropup{:role => "group"}
-          %button.btn.btn-default.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :type => "button"}
+          %button.btn.btn-default.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :type => "button", :axis => "x"}
             Скорость, км./ч.
             %span.caret
           %ul.dropdown-menu{:role => "menu"}
             %li
-              %a{:href => "#"} Dropdown link
+              %a{:href => "#"} Макс. урон за 10 сек         
             %li
-              %a{:href => "#"} Dropdown link    
+              %a{:href => "#"} Прочность
+            %li
+              %a{:href => "#"} Скорость
+            %li
+              %a{:href => "#"} Урон КС/БП
+            %li
+              %a{:href => "#"} Урон базовый 
+
   .row.vertical-space
     .col-xs-12.center
       %p.text-center

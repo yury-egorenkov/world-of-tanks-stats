@@ -12,19 +12,16 @@ tankImageUrl = (d, axis) ->
         x + "=" + axis(d[x]).replace(/#/, '')
       )
 
-    url = encodeURI("/home/tank_image/" + d["image"].replace(/\.[^\.]+$/, '') + '?' + params.join('&'))
-
-    console.log url
-
-    url
-
+    encodeURI("/home/tank_image/" + d["image"].replace(/\.[^\.]+$/, '') + '?' + params.join('&'))
 
 ready = ->
+  tankSize = 150
+
   margin = 
     top: 10
     right: 50
     bottom: 30
-    left: 40
+    left: 50
 
   width = 1170 - margin.left - margin.right
   height = 500 - margin.top - margin.bottom
@@ -42,26 +39,18 @@ ready = ->
 
   y = d3.scale.linear().range([height, 0])
 
-  r = d3.scale.linear()
-        .range([3, 10])
+  r = d3.scale.linear().range([3, 10])
 
-  armor = d3.scale.linear()
-            .range(['#FF0000', '#FFB72B', '#00CE00'])
+  armor = d3.scale.linear().range(['#FF0000', '#FFB72B', '#00CE00'])
 
+  d3.json '/data.json', (tanksData) ->
 
-  d3.json 'http://localhost:3000/data.json', (tanksData) ->
+    x_dimension = "Скорость"
+    y_dimension = "Макс. урон за 10 сек"
 
-    x.domain d3.extent(tanksData, (d) ->
-      d["Скорость"]
-    )
-
-    y.domain d3.extent(tanksData, (d) ->
-      d["Макс. урон за 10 сек"]
-    )
-
-    r.domain d3.extent(tanksData, (d) ->
-      d["Прочность"]
-    )
+    x.domain( d3.extent( tanksData, (d) -> d[x_dimension] ))
+    y.domain( d3.extent( tanksData, (d) -> d[y_dimension] ))
+    r.domain( d3.extent( tanksData, (d) -> d["Прочность"] ))
 
     armorDomain = d3.extent(tanksData, (d) -> d["Бронепр-ть базовая"])
     armor.domain(splitDomain(armorDomain))
@@ -71,42 +60,119 @@ ready = ->
     )
 
     svg.append('g')
+      .attr("class", "x axis")
       .attr('transform', 'translate(0,' + height + ')')
-      .call d3.svg.axis().scale(x).orient('bottom')
+      .call(d3.svg.axis().scale(x).orient('bottom'))
 
     svg.append('g')
-      .call d3.svg.axis().scale(y).orient('left')
-
-    tankSize = 150
+      .attr("class", "y axis")
+      .call( d3.svg.axis().scale(y).orient('left') )
 
     tank = svg.selectAll('g.tank')
            .data(tanksData)
            .enter()
            .append('g')
            .attr('class', 'tank')
-           .filter((d) -> d["country"] == "Ru" && d["tank_type"] == "Средние")
 
     tank.append("svg:image")
-      .attr('x', (d) -> x(d["Скорость"]) - 30)
-      .attr('y', (d) -> y(d["Макс. урон за 10 сек"]) - tankSize / 2 + 20)
+      .attr('class', 'tank-image')
+      .attr('x', (d) -> x(d[x_dimension]) - 30)
+      .attr('y', (d) -> y(d[y_dimension]) - tankSize / 2 + 20)
       .attr('width', tankSize)
       .attr('height', tankSize)
       .attr('xlink:href', (d) -> tankImageUrl(d, armor))
-      .attr('css', 'transform: scaleX(-1)')
+
+    tank.append("svg:image")
+      .attr('class', 'flag')
+      .attr('x', (d) -> x(d[x_dimension]) - 50)
+      .attr('y', (d) -> y(d[y_dimension]) - 10)
+      .attr('width', 33)
+      .attr('height', 20)
+      .attr('xlink:href', (d) ->
+        "/assets/flag-" + d["country"].toLowerCase() + ".jpg"
+      )
         
     tank.append('circle')
       .attr('r', (d) -> r(d["Прочность"]))
       .attr('fill', (d) -> armor(d["Бронепр-ть базовая"]))
-      .attr('cx', (d) -> x(d["Скорость"]))
-      .attr('cy', (d) -> y(d["Макс. урон за 10 сек"]))
+      .attr('cx', (d) -> x(d[x_dimension]))
+      .attr('cy', (d) -> y(d[y_dimension]))
 
     tank.append('text')
       .attr('dx', 10)
       .attr('dy', 5)
       .text((d) -> d["name"])
-      .attr('x', (d) -> x(d["Скорость"]))
-      .attr('y', (d) -> y(d["Макс. урон за 10 сек"]))
+      .attr('x', (d) -> x(d[x_dimension]))
+      .attr('y', (d) -> y(d[y_dimension]))
+      .attr('class', 'label')
 
+    update = ->
+      tank.selectAll(".tank-image")
+        .transition()
+        .duration(1500)
+        .attr('x', (d) -> x(d[x_dimension]) - 30)
+        .attr('y', (d) -> y(d[y_dimension]) - tankSize / 2 + 20)
+        .attr('width', tankSize)
+        .attr('height', tankSize)
+
+      tank.selectAll(".flag")
+        .transition()
+        .duration(1500)
+        .attr('x', (d) -> x(d[x_dimension]) - 50)
+        .attr('y', (d) -> y(d[y_dimension]) - 10)
+        .attr('width', 33)
+        .attr('height', 20)
+
+      tank.selectAll('circle')
+        .transition()
+        .duration(1500)
+        .attr('r', (d) -> r(d["Прочность"]))
+        .attr('fill', (d) -> armor(d["Бронепр-ть базовая"]))
+        .attr('cx', (d) -> x(d[x_dimension]))
+        .attr('cy', (d) -> y(d[y_dimension]))
+
+      tank.selectAll('text')
+        .transition()
+        .duration(1500)
+        .attr('dx', 10)
+        .attr('dy', 5)
+        .text((d) -> d["name"])
+        .attr('x', (d) -> x(d[x_dimension]))
+        .attr('y', (d) -> y(d[y_dimension]))
+        .attr('class', 'label')        
+
+    # Change dimensions
+    $('.dropdown-menu li a').click (el) ->
+      btn = $(this).parents(".btn-group").find('.btn')
+      btn.html( $(this).text() + ' <span class="caret"></span>' )
+
+      axis = btn.attr('axis')
+ 
+      if (axis == 'x')        
+        x_dimension = $(this).text()
+        x.domain( d3.extent( tanksData, (d) -> d[x_dimension] ))
+
+      if (axis == 'y') 
+        y_dimension = $(this).text()
+        y.domain( d3.extent( tanksData, (d) -> d[y_dimension] ))
+
+      svg.selectAll('g.y.axis')
+        .transition()
+        .duration(1500)
+        .ease("sin-in-out")
+        .call( d3.svg.axis().scale(y).orient('left') )
+
+      svg.selectAll('g.x.axis')
+        .transition()
+        .duration(1500)
+        .ease("sin-in-out")
+        .call( d3.svg.axis().scale(x).orient('bottom') )
+
+      update()
+
+    $('.filters .btn').click ->
+
+      
 
 
 
