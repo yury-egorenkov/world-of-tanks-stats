@@ -57,27 +57,33 @@ class HomeController < ApplicationController
     name = params[:name]
 
     path = Rails.root.join('app', 'assets', 'images', 'tanks')
-    image = Magick::Image.read("#{path}/#{name}.png").first {self.background_color = "none"}
+    png_file = "#{path}/#{name}.png"
+    svg_file = "#{path}/#{name}.svg"
+    mask_file = "#{path}/#{name}-mask.png"
 
-    unless File.exists?("#{path}/#{name}.svg")
+
+    image = Magick::Image.read(png_file).first {self.background_color = "none"}
+
+    unless File.exists?(svg_file)
       send_data image.to_blob, :disposition => 'inline', 
         type: image.mime_type
       return
     end
 
-    svg = File.read("#{path}/T-34-85.svg")
+    svg = File.read(svg_file)
     doc = Nokogiri::XML.parse(svg)
     %w( Лоб Борт Корма Лоб-башни Борт-башни Корма-башни ).each do |item|
       doc.css("##{item}").set(:fill, "##{params[item]}") if params[item]  
+      ap doc.css("##{item}")
     end
     
-    File.open("#{path}/T-34-85.svg", "w") do |file|
+    File.open(svg_file, "w") do |file|
       file.puts doc
     end
 
-    `convert -background none "#{path}/#{name}.svg" "#{path}/#{name}-mask.png"`
+    `convert -background none #{svg_file} #{mask_file}`
 
-    mask = Magick::Image.read("#{path}/#{name}-mask.png").first
+    mask = Magick::Image.read(mask_file).first
 
     composite = image.dissolve(mask, 0.5, 1, Magick::CenterGravity)
 

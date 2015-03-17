@@ -5,6 +5,20 @@
 splitDomain = (domain) ->
   [domain[0], (domain[1] - domain[0]) / 2, domain[1]]
 
+tankImageUrl = (d, axis) ->
+    # Add armor colors to image url
+    params = ['Лоб', 'Борт', 'Корма', 'Лоб-башни', 'Борт-башни', 
+      'Корма-башни'].map( (x) ->
+        x + "=" + axis(d[x]).replace(/#/, '')
+      )
+
+    url = encodeURI("/home/tank_image/" + d["image"].replace(/\.[^\.]+$/, '') + '?' + params.join('&'))
+
+    console.log url
+
+    url
+
+
 ready = ->
   margin = 
     top: 10
@@ -32,7 +46,7 @@ ready = ->
         .range([3, 10])
 
   armor = d3.scale.linear()
-            .range(['#d9534f', '#f0ad4e', '#5cb85c'])
+            .range(['#FF0000', '#FFB72B', '#00CE00'])
 
 
   d3.json 'http://localhost:3000/data.json', (tanksData) ->
@@ -73,28 +87,18 @@ ready = ->
            .filter((d) -> d["country"] == "Ru" && d["tank_type"] == "Средние")
 
     tank.append("svg:image")
-      .attr('x', (d) -> x(d["Скорость"]) - tankSize)
-      .attr('y', (d) -> y(d["Макс. урон за 10 сек"]) - tankSize / 2)
+      .attr('x', (d) -> x(d["Скорость"]) - 30)
+      .attr('y', (d) -> y(d["Макс. урон за 10 сек"]) - tankSize / 2 + 20)
       .attr('width', tankSize)
       .attr('height', tankSize)
-      .attr('xlink:href', (d) -> 
-        params = ['Лоб', 'Борт', 'Корма', 'Лоб-башни', 'Борт-башни', 'Корма-башни'].map (x) ->
-          x + "=" + armor(d[x]).replace(/#/, '')
-        encodeURI "/home/tank_image/" + d["image"].replace(/\.[^\.]+$/, '') + '?' + params.join('&')
-      )
+      .attr('xlink:href', (d) -> tankImageUrl(d, armor))
+      .attr('css', 'transform: scaleX(-1)')
         
     tank.append('circle')
       .attr('r', (d) -> r(d["Прочность"]))
       .attr('fill', (d) -> armor(d["Бронепр-ть базовая"]))
       .attr('cx', (d) -> x(d["Скорость"]))
       .attr('cy', (d) -> y(d["Макс. урон за 10 сек"]))
-      # g.append('text')
-      #   .attr('dx', 10)
-      #   .attr('dy', 5)
-      #   .text((d) -> d["name"])
-      #   .attr('x', (d) -> x(d["Скорость"]))
-      #   .attr('y', (d) -> y(d["Макс. урон за 10 сек"]))
-
 
     tank.append('text')
       .attr('dx', 10)
@@ -103,8 +107,6 @@ ready = ->
       .attr('x', (d) -> x(d["Скорость"]))
       .attr('y', (d) -> y(d["Макс. урон за 10 сек"]))
 
-    # mySVGsToInject = document.querySelectorAll('img.inject-me');
-    # SVGInjector(mySVGsToInject);      
 
 
 
