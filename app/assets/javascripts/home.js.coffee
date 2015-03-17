@@ -72,7 +72,17 @@ ready = ->
            .data(tanksData)
            .enter()
            .append('g')
-           .attr('class', 'tank')
+           .attr('class', (d) -> 
+            'tank ' + d["country"].toLowerCase() + ' ' + d["tank_type"] + ' level' + d["level"]
+           )
+           .attr('opacity', (d) -> 
+              d["visible"] = d["country"] == "Ru" && d["tank_type"] == "middle"
+
+              if d["visible"] 
+                return 1
+
+              return 0
+           )
 
     tank.append("svg:image")
       .attr('class', 'tank-image')
@@ -141,20 +151,26 @@ ready = ->
         .attr('y', (d) -> y(d[y_dimension]))
         .attr('class', 'label')        
 
-    # Change dimensions
-    $('.dropdown-menu li a').click (el) ->
-      btn = $(this).parents(".btn-group").find('.btn')
-      btn.html( $(this).text() + ' <span class="caret"></span>' )
+    increaseExtent = (extent, delta) ->
+      diff = (extent[1] - extent[0]) * delta
+      return [extent[0] - delta, extent[1] + delta]
 
-      axis = btn.attr('axis')
- 
-      if (axis == 'x')        
-        x_dimension = $(this).text()
-        x.domain( d3.extent( tanksData, (d) -> d[x_dimension] ))
+    changeAxis = ->
+      x_extent = d3.extent( tanksData, (d) -> 
+        if d["visible"]
+          return d[x_dimension] 
 
-      if (axis == 'y') 
-        y_dimension = $(this).text()
-        y.domain( d3.extent( tanksData, (d) -> d[y_dimension] ))
+        return null
+      )
+      x.domain( increaseExtent(x_extent, 0.2) )
+
+      y_extent = d3.extent( tanksData, (d) ->
+        if d["visible"]
+          return d[y_dimension] 
+
+        return null        
+      )
+      y.domain( increaseExtent(y_extent, 0.2) )
 
       svg.selectAll('g.y.axis')
         .transition()
@@ -170,9 +186,57 @@ ready = ->
 
       update()
 
-    $('.filters .btn').click ->
 
-      
+
+    # Change dimensions
+    $('.dropdown-menu li a').click (el) ->
+      btn = $(this).parents(".btn-group").find('.btn')
+      btn.html( $(this).text() + ' <span class="caret"></span>' )
+
+      axis = btn.attr('axis')
+ 
+      if (axis == 'x')        
+        x_dimension = $(this).text()
+
+      if (axis == 'y') 
+        y_dimension = $(this).text()
+
+      changeAxis()
+
+
+    $('.filters .btn').click ->
+      $(this).toggleClass('active')
+
+      countries = $.makeArray( $('.countries .active').map (i, d) ->
+        $(d).attr 'value'
+      )
+
+      tankTypes = $.makeArray( $('.tank-types .active').map (i, d) ->
+        $(d).attr 'value'
+      )
+
+      levels = $.makeArray( $('.levels .active').map (i, d) ->
+        parseInt( $(d).attr('value') )
+      )
+
+      svg.selectAll('g.tank')
+        .transition()
+        .duration(1500)
+        .attr('opacity', (d) ->
+                    
+          d["visible"] = countries.indexOf(d["country"]) != -1 &&
+              tankTypes.indexOf(d["tank_type"]) != -1 &&
+              levels.indexOf( d["level"] ) != -1
+          
+          if d["visible"] 
+            return 1 
+
+          return 0
+        )
+
+
+      changeAxis()
+            
 
 
 

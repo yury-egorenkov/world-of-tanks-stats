@@ -5,8 +5,8 @@
   .row
     .col-xs-12.filters
       .btn-toolbar{"aria-label" => "...", :role => "toolbar"}
-        .btn-group{"aria-label" => "...", :role => "group"}
-          %button.btn.btn-default{:type => "button", key: 'country', value: 'Ru'} 
+        .btn-group.countries{"aria-label" => "...", :role => "group"}
+          %button.btn.btn-default.active{:type => "button", key: 'country', value: 'Ru'} 
             .flag.ussr
             .text
               СССР
@@ -23,15 +23,15 @@
             .text
               БРИТ
 
-        .btn-group{"aria-label" => "...", :role => "group"}
-          %button.btn.btn-default{:type => "button"} Легкие
-          %button.btn.btn-default{:type => "button"} Средние
-          %button.btn.btn-default{:type => "button"} Тяжелые
-          %button.btn.btn-default{:type => "button"} ПТ-САУ
+        .btn-group.tank-types{"aria-label" => "...", :role => "group"}
+          %button.btn.btn-default{:type => "button", key: 'tank_type', value: 'light'} Легкие
+          %button.btn.btn-default.active{:type => "button", key: 'tank_type', value: 'middle'} Средние
+          %button.btn.btn-default{:type => "button", key: 'tank_type', value: 'heavy'} Тяжелые
+          %button.btn.btn-default{:type => "button", key: 'tank_type', value: 'anti'} ПТ-САУ
 
-        .btn-group.pull-right{"aria-label" => "...", :role => "group"} 
+        .btn-group.pull-right.levels{"aria-label" => "...", :role => "group"} 
           -[*1..10].each do |i|
-            %button.btn.btn-default{:type => "button"}
+            %button.btn.btn-default.active{:type => "button", key: 'level', value: i}
               = RomanNumerals.to_roman(i)
               = " Уровень" if i == 10
 

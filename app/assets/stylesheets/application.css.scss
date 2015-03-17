@@ -17,6 +17,18 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+$input-border-focus: none;
+
+.btn:focus, .btn:active { 
+  outline: none!important; 
+  background-color: transparent!important; 
+}
+
+.btn.active:focus {
+  @extend .btn:hover;
+  background-color: #e6e6e6!important;
+}
+
 .tanks-stat {
   min-width: 1170px;
 }
@@ -129,5 +141,8 @@ path, line {
 }
 
 .label {
-  text-shadow: 1px 1px 1px white;
+  color: white;
+  fill: #eee;
+  text-shadow: 1px 1px 1px black;
 }
+
