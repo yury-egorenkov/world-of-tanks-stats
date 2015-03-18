@@ -14,7 +14,7 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap-sprockets
-//= require svg-injector.min
+//= require d3.v3.min
 //= require_tree .
 
 

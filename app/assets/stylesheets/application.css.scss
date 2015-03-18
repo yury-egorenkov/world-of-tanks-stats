@@ -84,6 +84,15 @@ $input-border-focus: none;
   }
 }
 
+@mixin create-flags($country_names, $height) {
+  @each $country in $country_names {
+      $i: index($country_names, $country);
+      &.#{$country} {
+        background-position: 0 ($i - 1) * (-$height);
+      }    
+  }  
+}
+
 .flag {
   $width: 33px; // Original width: 150px;
   $height: 20px; // Original height: 20px;
@@ -93,16 +102,15 @@ $input-border-focus: none;
   background-image: url( asset_path('nation-retina.png') );
   background-repeat: no-repeat;
   background-size: $width ($height * 4);
+  background-position: 0 $height;
   width: $width;
   height: $height;
 
   $country_names: "us", "ussr", "germany", "uk";
-  @each $country in $country_names {
-      $i: index($country_names, $country);
-      &.#{$country} {
-        background-position: 0 ($i - 1) * (-$height);
-      }    
-  }
+  @include create-flags($country_names, $height);
+
+  $country_names: "am", "ru", "ge", "uk";
+  @include create-flags($country_names, $height);
 
 }
 
@@ -145,4 +153,71 @@ path, line {
   fill: #eee;
   text-shadow: 1px 1px 1px black;
 }
+
+
+.tank {
+  transition: opacity 1.5s ease-in-out;
+
+  &.invisible {
+    opacity: 0;
+    z-index: -1;    
+  }
+}
+
+.description {
+  width: 400px;
+  border: 1px solid gray;
+  padding: 10px;
+  font-size: 11px;
+  margin: 0 auto;
+
+  .row {
+    margin-top: 5px;
+  }
+
+  hr {
+    margin: 0;
+  }
+
+  .group {
+    @extend .row;
+  }
+
+  .field {
+    @extend .col-xs-8;    
+  }
+
+  .value {
+    @extend .col-xs-4;     
+  }
+
+  .armor{
+    font-size: 110%;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .title div {
+    float: left;
+    vertical-align: middle;
+    font-size: 26px;
+    line-height: 26px;
+
+    &:not(:first-child) {
+      margin-left: 15px;
+    }
+  }
+
+  .name {
+    font-size: 26px;
+    font-weight: bold;
+  }
+
+  img {
+    width: 200px;
+  }
+
+}
+
+
 

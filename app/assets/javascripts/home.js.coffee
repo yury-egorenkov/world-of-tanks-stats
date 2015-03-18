@@ -5,13 +5,17 @@
 splitDomain = (domain) ->
   [domain[0], (domain[1] - domain[0]) / 2, domain[1]]
 
-tankImageUrl = (d, axis) ->
-    # Add armor colors to image url
+tankImageUrl = (d) ->
+  "/assets/tanks/" + d["image"]
+
+tankImageUrlWithZones = (d, axis) ->
+    # # Add armor colors to image url
     params = ['Лоб', 'Борт', 'Корма', 'Лоб-башни', 'Борт-башни', 
       'Корма-башни'].map( (x) ->
         x + "=" + axis(d[x]).replace(/#/, '')
       )
 
+    # With damage zones
     encodeURI("/home/tank_image/" + d["image"].replace(/\.[^\.]+$/, '') + '?' + params.join('&'))
 
 ready = ->
@@ -75,13 +79,9 @@ ready = ->
            .attr('class', (d) -> 
             'tank ' + d["country"].toLowerCase() + ' ' + d["tank_type"] + ' level' + d["level"]
            )
-           .attr('opacity', (d) -> 
-              d["visible"] = d["country"] == "Ru" && d["tank_type"] == "middle"
-
-              if d["visible"] 
-                return 1
-
-              return 0
+           .classed('invisible', (d) -> 
+             d["visible"] = d["country"] == "Ru" && d["tank_type"] == "middle" 
+             !d["visible"]
            )
 
     tank.append("svg:image")
@@ -90,7 +90,7 @@ ready = ->
       .attr('y', (d) -> y(d[y_dimension]) - tankSize / 2 + 20)
       .attr('width', tankSize)
       .attr('height', tankSize)
-      .attr('xlink:href', (d) -> tankImageUrl(d, armor))
+      .attr('xlink:href', (d) -> tankImageUrlWithZones(d, armor))
 
     tank.append("svg:image")
       .attr('class', 'flag')
@@ -99,8 +99,7 @@ ready = ->
       .attr('width', 33)
       .attr('height', 20)
       .attr('xlink:href', (d) ->
-        "/assets/flag-" + d["country"].toLowerCase() + ".jpg"
-      )
+        "/assets/flag-" + d["country"].toLowerCase() + ".jpg")
         
     tank.append('circle')
       .attr('r', (d) -> r(d["Прочность"]))
@@ -115,6 +114,22 @@ ready = ->
       .attr('x', (d) -> x(d[x_dimension]))
       .attr('y', (d) -> y(d[y_dimension]))
       .attr('class', 'label')
+
+    tank.on('mouseover', (d, i) ->
+      if d["visible"]
+        $('.description .name').text d["name"]  
+        $('.description .flag').removeClass().addClass('flag ' + d["country"].toLowerCase())
+        $('.description .tank_type').text d["tank_type"]
+
+        for k,v of d
+          $('.description .group[key="' + k + '"] .value').first().text v
+
+        $('.description .image_original').html '<img src="' + tankImageUrl(d) + '"/>'
+        $('.description .image_with_zones').html '<img src="' + tankImageUrlWithZones(d, armor) + '"/>'
+        
+
+    ).on 'mouseout', (d, i) ->
+      return
 
     update = ->
       tank.selectAll(".tank-image")
@@ -153,7 +168,7 @@ ready = ->
 
     increaseExtent = (extent, delta) ->
       diff = (extent[1] - extent[0]) * delta
-      return [extent[0] - delta, extent[1] + delta]
+      return [extent[0] - diff, extent[1] + diff]
 
     changeAxis = ->
       x_extent = d3.extent( tanksData, (d) -> 
@@ -162,7 +177,7 @@ ready = ->
 
         return null
       )
-      x.domain( increaseExtent(x_extent, 0.2) )
+      x.domain( increaseExtent(x_extent, 0.15) )
 
       y_extent = d3.extent( tanksData, (d) ->
         if d["visible"]
@@ -170,7 +185,7 @@ ready = ->
 
         return null        
       )
-      y.domain( increaseExtent(y_extent, 0.2) )
+      y.domain( increaseExtent(y_extent, 0.15) )
 
       svg.selectAll('g.y.axis')
         .transition()
@@ -203,7 +218,7 @@ ready = ->
 
       changeAxis()
 
-
+    # Change filters
     $('.filters .btn').click ->
       $(this).toggleClass('active')
 
@@ -220,19 +235,14 @@ ready = ->
       )
 
       svg.selectAll('g.tank')
-        .transition()
-        .duration(1500)
-        .attr('opacity', (d) ->
-                    
+        .classed('invisible', (d) -> 
           d["visible"] = countries.indexOf(d["country"]) != -1 &&
               tankTypes.indexOf(d["tank_type"]) != -1 &&
               levels.indexOf( d["level"] ) != -1
-          
-          if d["visible"] 
-            return 1 
 
-          return 0
+          !d["visible"]
         )
+
 
 
       changeAxis()

@@ -80,7 +80,6 @@
   .row.vertical-space
     .col-xs-12
       .chart
-
   .row.vertical-space.pull-right
     .col-xs-12
       .btn-group{"aria-label" => "Y", :role => "group"}
@@ -99,6 +98,75 @@
               %a{:href => "#"} Урон КС/БП
             %li
               %a{:href => "#"} Урон базовый 
+
+  .row.vertical-space
+    .col-xs-12
+      .description
+        .row
+          .col-xs-12
+            .title
+              .name
+              .flag
+              .tank_type
+        .row
+          .col-xs-6
+            .group{ key: 'Скорость' }
+              .field
+                Скорость, км/ч
+              .value  
+                0
+            .group{ key: 'Макс. урон за 10 сек'}
+              .field
+                Макс. урон за 10 сек
+              .value 
+                0
+            .group{ key: 'Прочность'}
+              .field
+                Прочность у.е.
+              .value 
+                0
+            .armor
+              Броня у.е.
+            - ['Лоб', 'Борт', 'Корма', 'Лоб-башни', 'Борт-башни', 'Корма-башни'].each do |item|
+              .group{ key: item }
+                .field
+                  = item
+                .value 
+                  0            
+          .col-xs-6
+            .image_original
+              
+            .image_with_zones
+        .row
+          .col-xs-4
+            Боевые характеристики
+          .col-xs-4
+            с базовыми патронами
+          .col-xs-4
+            с бронеб. патронами
+        %hr
+        .row
+          .col-xs-4
+            Бронебойность
+          .col-xs-4
+            .group{ key: 'Бронепр-ть базовая' }
+              .value
+                0
+          .col-xs-4
+            .group{ key: 'Урон базовый' }
+              .value
+                0
+        .row
+          .col-xs-4
+            Урон
+          .col-xs-4
+            .group{ key: 'Бронепр-ть КС/БП' }
+              .value
+                0
+          .col-xs-4
+            .group{ key: 'Урон КС/БП' }
+              .value
+                0
 
   .row.vertical-space
     .col-xs-12.center
