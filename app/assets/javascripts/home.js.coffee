@@ -121,8 +121,9 @@ ready = ->
         $('.description .flag').removeClass().addClass('flag ' + d["country"].toLowerCase())
         $('.description .tank_type').text d["tank_type"]
 
-        for k,v of d
+        for k, v of d
           $('.description .group[key="' + k + '"] .value').first().text v
+          $('.description .group[key="' + k + '"] .mark').first().css('background-color', armor(v))
 
         $('.description .image_original').html '<img src="' + tankImageUrl(d) + '"/>'
         $('.description .image_with_zones').html '<img src="' + tankImageUrlWithZones(d, armor) + '"/>'

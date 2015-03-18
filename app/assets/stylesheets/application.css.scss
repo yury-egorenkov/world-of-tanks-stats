@@ -165,7 +165,7 @@ path, line {
 }
 
 .description {
-  width: 400px;
+  width: 500px;
   border: 1px solid gray;
   padding: 10px;
   font-size: 11px;
@@ -189,6 +189,16 @@ path, line {
 
   .value {
     @extend .col-xs-4;     
+  }
+
+  .mark {
+    position: absolute;
+    background-color: red;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    right: 40px;
+    margin-top: 3px;
   }
 
   .armor{
