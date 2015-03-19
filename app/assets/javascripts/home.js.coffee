@@ -9,14 +9,18 @@ tankImageUrl = (d) ->
   "/assets/tanks/" + d["image"]
 
 tankImageUrlWithZones = (d, axis) ->
-    # # Add armor colors to image url
-    params = ['Лоб', 'Борт', 'Корма', 'Лоб-башни', 'Борт-башни', 
-      'Корма-башни'].map( (x) ->
-        x + "=" + axis(d[x]).replace(/#/, '')
-      )
+  tankImageUrl(d).replace(/\.[^\.]+$/, '') + '-zoned.png'
 
-    # With damage zones
-    encodeURI("/home/tank_image/" + d["image"].replace(/\.[^\.]+$/, '') + '?' + params.join('&'))
+repaintTankImageZones = (d, axis) ->
+  # # Add armor colors to image url
+  params = ['Лоб', 'Борт', 'Корма', 'Лоб-башни', 'Борт-башни', 
+    'Корма-башни'].map( (x) ->
+      x + "=" + axis(d[x]).replace(/#/, '')
+    )
+
+  # With damage zones
+  encodeURI("/home/tank_image/" + d["image"].replace(/\.[^\.]+$/, '') + '?' + params.join('&'))
+
 
 ready = ->
   tankSize = 150

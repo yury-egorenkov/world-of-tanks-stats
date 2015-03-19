@@ -67,7 +67,6 @@ class HomeController < ApplicationController
 
     unless File.exists?(svg_file)
       image.flop.write zoned_file
-
       send_data image.flop.to_blob, :disposition => 'inline', 
         type: image.mime_type
       return
@@ -90,7 +89,7 @@ class HomeController < ApplicationController
     composite = image.dissolve(mask, 0.5, 1, Magick::CenterGravity)
 
     resized = composite.flop.resize_to_fit(400, 400)
-    resized.write(zoned_file)
+    # resized.write(zoned_file)
     send_data resized.to_blob, :disposition => 'inline', type: resized.mime_type
   end
 
