@@ -80,9 +80,13 @@ class HomeController < ApplicationController
       file.puts doc
     end
 
+    mask_file = Magick::Image.read(svg_file).first do
+      self.background_color = "red"
+    end
+
     `convert -background none #{svg_file} #{mask_file}`
 
-    mask = Magick::Image.read(mask_file).first
+    mask = Magick::Image.from_blob(mask_file.to_blob)
 
     composite = image.dissolve(mask, 0.5, 1, Magick::CenterGravity)
 
