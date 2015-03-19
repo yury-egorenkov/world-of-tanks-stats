@@ -61,3 +61,4 @@ group :production do
   gem 'rails_12factor'
 end
 
+gem "non-stupid-digest-assets"
