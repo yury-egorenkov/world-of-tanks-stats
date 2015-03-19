@@ -19,9 +19,9 @@
 
 $input-border-focus: none;
 
-.btn:focus, .btn:active { 
-  outline: none!important; 
-  background-color: transparent!important; 
+.btn:focus, .btn:active {
+  outline: none!important;
+  background-color: transparent!important;
 }
 
 .btn.active:focus {
@@ -40,7 +40,11 @@ $input-border-focus: none;
 
   width: 80px;
 
-  img, image {
+  image {
+    height: auto;
+  }
+
+  img {
     width: 100%;
     height: auto;
   }
@@ -58,7 +62,7 @@ $input-border-focus: none;
   margin-top: 10px;
 }
 
-.armor-legend {  
+.armor-legend {
 
   & > * {
     // display: inline-block;
@@ -71,7 +75,7 @@ $input-border-focus: none;
 
   .title {
     margin-right: 4px;
-  } 
+  }
 
   .step {
     color: white;
@@ -89,8 +93,8 @@ $input-border-focus: none;
       $i: index($country_names, $country);
       &.#{$country} {
         background-position: 0 ($i - 1) * (-$height);
-      }    
-  }  
+      }
+  }
 }
 
 .flag {
@@ -119,7 +123,7 @@ $input-border-focus: none;
   vertical-align: middle;
   &:not(:first-child) {
     margin-left: 4px;
-  }  
+  }
 }
 
 .chart {
@@ -140,8 +144,8 @@ path, line {
 //     -webkit-transform: scaleX(-1);
 //     transform: scaleX(-1);
 //     filter: FlipH;
-//     -ms-filter: "FlipH"; 
-//   }   
+//     -ms-filter: "FlipH";
+//   }
 // }
 
 .tank {
@@ -160,7 +164,7 @@ path, line {
 
   &.invisible {
     opacity: 0;
-    z-index: -1;    
+    z-index: -1;
   }
 }
 
@@ -184,11 +188,11 @@ path, line {
   }
 
   .field {
-    @extend .col-xs-8;    
+    @extend .col-xs-8;
   }
 
   .value {
-    @extend .col-xs-4;     
+    @extend .col-xs-4;
   }
 
   .mark {
